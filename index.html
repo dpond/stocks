@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Stocks!</title>
     <link rel="icon" href="https://d3v3cbxkdlyonc.cloudfront.net/stocks/favicon.ico">
-    <meta name="description" content="A free, lightweight, blazing-fast page to get stock quotes using the IEX API">
+    <meta name="description" content="A page to get stock quotes using the IEX API.">
 
     <style>
       html {
@@ -19,10 +19,15 @@
       table { font-family: Courier, monospace; }
       .stocks-container {
         margin-bottom: 1.5em;
-        width: 50%;
-        /* max-width: 600px; */
+        width: 100%;
+/*         max-width: 600px; */
       }
       .stocks-container a { text-decoration: none; }
+      .stocks-portfolio {
+        width: 40%;
+        float: left;
+        padding: 0px 50px 0px 50px;
+      }
       table {
         border-collapse: collapse;
         width: 100%;
@@ -55,23 +60,23 @@
   <body>
     <div class="stocks-container"></div>
 
+	<div style="clear: both; padding: 20px 20px 20px 20px">
     <p class="attribution">
       Data provided for free by <a href="https://iextrading.com/developer/" target="_blank">IEX</a>.
       Subject to <a href="https://iextrading.com/api-exhibit-a/" target="_blank">IEX Exhibit A</a>.
     </p>
 
     <p class="updated-timestamp"></p>
-
-    <p>Customize <a href="https://github.com/toddwschneider/stocks" target="_blank">on GitHub</p>
-
+	</div>
+	
     <script>
       'use strict';
 
       const PORTFOLIOS = [
-        {'name': 'Tech Px', 'symbols': ['ADBE', 'ADSK', 'AMZN', 'EQT', 'FB', 'IPGP', 'IRBT', 'LRCX', 'PAYC', 'SQ']},
-        {'name': 'Energy Px', 'symbols': ['CHK', 'DVN', 'HAL', 'SLB', 'XOM']},
-        {'name': 'Business Px', 'symbols': ['AMH', 'GE', 'TSLA']},
-        {'name': 'Tech Tx', 'symbols': ['AAPL', 'GOOGL', 'MSFT', 'TWTR', 'NFLX', 'SNAP', 'SPOT', 'DBX', 'BABA', 'INTC', 'AMD', 'NVDA', 'ORCL']},
+        {'name': 'Tech', 'symbols': ['ADBE', 'ADSK', 'AMZN', 'EQT', 'FB', 'IPGP', 'IRBT', 'LRCX', 'PAYC', 'SQ']},
+        {'name': 'Energy', 'symbols': ['CHK', 'DVN', 'HAL', 'SLB', 'XOM']},
+        {'name': 'Other', 'symbols': ['AMH', 'GE', 'TSLA']},
+        {'name': 'Tracking', 'symbols': ['AAPL', 'GOOGL', 'MSFT', 'TWTR', 'NFLX', 'SNAP', 'SPOT', 'DBX', 'BABA', 'INTC', 'AMD', 'NVDA', 'ORCL']},
       ];
 
       const REFRESH_SECONDS = 5 * 60;
@@ -82,12 +87,16 @@
       let containerDiv = document.querySelector('.stocks-container');
       let updatedDiv = document.querySelector('.updated-timestamp');
 
-      PORTFOLIOS.forEach((p, i) => addPortfolio(p, i === 0));
+      PORTFOLIOS.forEach((p, i) => addPortfolio(p, true));
       symbols = symbols.filter((s, i) => symbols.indexOf(s) === i);
       updateData('addTitle');
       setInterval(updateData, REFRESH_SECONDS * 1000);
 
       function addPortfolio(portfolio, includeHeader) {
+      	var div = document.createElement('div');
+      	div.setAttribute('class', 'stocks-portfolio');
+      	containerDiv.appendChild(div);
+      	
         let tableHeaderHtml = '';
         if (includeHeader) {
           tableHeaderHtml = `
@@ -129,7 +138,8 @@
           </details>
         `;
 
-        containerDiv.appendChild(portfolioDiv);
+//         containerDiv.appendChild(portfolioDiv);
+        div.appendChild(portfolioDiv);
       }
 
       function updateData(addTitle) {
